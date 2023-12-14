@@ -24,9 +24,10 @@ export class UserController {
     getUserById(@Param('id') id: string){
         const res = this.userService.getUserById(id)
         if(res===null){
-            throw new HttpException(`Not found User with id :${id}`, HttpStatus.BAD_REQUEST)
-            return
-        }
+            return new Promise((resolve, reject) =>{
+                setTimeout(()=>reject('Request error'), 2000);
+            });
+        };
         return res
     }
 }
