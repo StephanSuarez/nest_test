@@ -1,6 +1,10 @@
 import { Body, Controller, Get, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDto } from './dto/user.dto';
+import { NotFoundError } from 'rxjs';
+import { Param } from '@nestjs/common';
+import { HttpException } from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common';
 
 @Controller('api/v1/user')
 export class UserController {
@@ -14,5 +18,15 @@ export class UserController {
     @Post()
     createUser(@Body() newUser : UserDto){
         console.log(newUser.name, newUser.age)
+    }
+
+    @Get(':id')
+    getUserById(@Param('id') id: string){
+        const res = this.userService.getUserById(id)
+        if(res===null){
+            throw new HttpException(`Not found User with id :${id}`, HttpStatus.BAD_REQUEST)
+            return
+        }
+        return res
     }
 }
